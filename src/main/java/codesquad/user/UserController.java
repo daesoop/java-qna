@@ -51,16 +51,35 @@ public class UserController {
         if (maybeUser.isPresent()) {
             User user = maybeUser.get();
             if (user.matchPassword(password)) {
-                session.setAttribute("loginUser", user);
+                session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, user);
+            }
+            if (!user.matchPassword(password)) {
+                return "redirect:/user/login";
             }
         }
-        System.out.println("login success");
         return "redirect:/";
     }
 
     @GetMapping("logout")
     public String logout(HttpSession session) {
-        session.removeAttribute("loginUser");
+        session.removeAttribute(HttpSessionUtils.USER_SESSION_KEY);
+        return "redirect:/";
+    }
+
+    @GetMapping("/password/{id}")
+    public String password(Model model, @PathVariable Long id) {
+        model.addAttribute("user", userRepository.findById(id).orElse(null));
+        return "/user/password";
+    }
+
+
+    @PostMapping("/password/{id}")
+    public String password(@PathVariable Long id, HttpSession session, String password, Model model) {
+        model.addAttribute("user", id);
+        User user = (User) session.getAttribute(HttpSessionUtils.USER_SESSION_KEY);
+        if (user.matchPassword(password)) {
+            return "user/update";
+        }
         return "redirect:/";
     }
 
@@ -73,31 +92,28 @@ public class UserController {
 
     @GetMapping("/{id}/form")
     public String updateForm(Model model, @PathVariable Long id, HttpSession session) {
-        Object sessionUser = session.getAttribute("loginUser");
-        if (sessionUser == null) {
+        if (!HttpSessionUtils.isLoginUser(session)) {
             return "redirect:/user/login";
         }
-        User sessionedUser = (User) sessionUser;
+        User sessionedUser = HttpSessionUtils.getUserFromSession(session);
         if (!id.equals(sessionedUser.getId())) {
-            throw new IllegalStateException("you can't access the others profile.");
+            throw new IllegalStateException("you can't access the other's profile.");
         }
-        model.addAttribute("userUpdate", userRepository.findById(id).orElse(null));
+        model.addAttribute("userUpdate", userRepository.findById(id).orElseThrow(NullPointerException::new));
         return "user/update";
     }
 
     @PutMapping("/{id}")
     public String update(User newUser, @PathVariable Long id, HttpSession session) {
-        Object sessionUser = session.getAttribute("loginUser");
-        if (sessionUser == null) {
+        if (!HttpSessionUtils.isLoginUser(session)) {
             return "redirect:/user/login";
         }
-        User sessionedUser = (User) sessionUser;
+        User sessionedUser = HttpSessionUtils.getUserFromSession(session);
         if (!id.equals(sessionedUser.getId())) {
-            throw new IllegalStateException("you can't access the others profile.");
+            throw new IllegalStateException("you can't access the other's profile.");
         }
-        User user = userRepository.findById(id).orElse(null);
-        user.updateForm(newUser);
-        userRepository.save(user);
+        User user = userRepository.findById(sessionedUser.getId()).orElse(null);
+        userRepository.save(user.update(newUser));
         return "redirect:/user/list";
     }
 }

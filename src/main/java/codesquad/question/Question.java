@@ -13,6 +13,7 @@ public class Question {
 
     private String writer;
     private String title;
+
     private String contents;
 
     public long getId() {

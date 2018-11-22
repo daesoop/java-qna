@@ -34,10 +34,6 @@ public class User {
         this.userId = userId;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
     public void setPassword(String password) {
         this.password = password;
     }
@@ -58,10 +54,11 @@ public class User {
         this.email = email;
     }
 
-    public void updateForm(User newUser) {
+    public User update(User newUser) {
         this.password = newUser.password;
         this.name = newUser.name;
         this.email = newUser.email;
+        return this;
     }
 
     @Override
