@@ -16,6 +16,14 @@ public class Question {
 
     private String contents;
 
+    public Question() {}
+
+    public Question(String writer, String title, String contents) {
+        this.writer = writer;
+        this.title = title;
+        this.contents = contents;
+    }
+
     public long getId() {
         return id;
     }
