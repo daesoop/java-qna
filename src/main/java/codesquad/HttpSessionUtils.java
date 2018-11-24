@@ -1,4 +1,7 @@
-package codesquad.user;
+package codesquad;
+
+import codesquad.question.Question;
+import codesquad.user.User;
 
 import javax.servlet.http.HttpSession;
 
@@ -17,5 +20,13 @@ public class HttpSessionUtils {
             return null;
         }
         return (User)session.getAttribute(USER_SESSION_KEY);
+    }
+
+    public static boolean isValid(HttpSession session, Question question) {
+        if (!isLoginUser(session)) {
+            return false;
+        }
+        User loginUser = getUserFromSession(session);
+        return  question.matchUserId(loginUser.getUserId());
     }
 }

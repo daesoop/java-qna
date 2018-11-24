@@ -16,7 +16,8 @@ public class Question {
 
     private String contents;
 
-    public Question() {}
+    public Question() {
+    }
 
     public Question(String writer, String title, String contents) {
         this.writer = writer;
@@ -54,5 +55,14 @@ public class Question {
 
     public void setContents(String contents) {
         this.contents = contents;
+    }
+
+    public boolean matchUserId(String userId) {
+        return this.writer.equals(userId);
+    }
+
+    public void update(Question newQuestion) {
+        this.title = newQuestion.title;
+        this.contents = newQuestion.contents;
     }
 }

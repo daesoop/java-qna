@@ -27,15 +27,15 @@
                     <div class="article-util">
                         <ul class="article-util-list">
                             <li>
-                                {{/question}}
-                                <a class="link-modify-article" href="/questions/423/form">수정</a>
+                                <a class="link-modify-article" href="/qna/updateChange/{{id}}/">수정</a>
                             </li>
                             <li>
-                                <form class="form-delete" action="/questions/423" method="POST">
+                                <form class="form-delete" action="/qna/delete/{{id}}" method="POST">
                                     <input type="hidden" name="_method" value="DELETE">
                                     <button class="link-delete-article" type="submit">삭제</button>
                                 </form>
                             </li>
+                                {{/question}}
                             <li>
                                 <a class="link-modify-article" href="/index">목록</a>
                             </li>
@@ -71,8 +71,7 @@
                                                href="/questions/413/answers/1405/form">수정</a>
                                         </li>
                                         <li>
-                                            <form class="delete-answer-form" action="/questions/413/answers/1405"
-                                                  method="POST">
+                                            <form class="delete-answer-form" action="/questions/413/answers/1405" method="POST">
                                                 <input type="hidden" name="_method" value="DELETE">
                                                 <button type="submit" class="delete-answer-button">삭제</button>
                                             </form>
@@ -145,7 +144,8 @@
         <div class="article-util">
             <ul class="article-util-list">
                 <li>
-                    <a class="link-modify-article" href="/api/qna/updateAnswer/{3}">수정</a>
+                    <a class="link-modify-article" href="/qna/updateAnswer/{{id}}">수정</a>
+                    <input type="hidden" name="_method" value="PUT" />
                 </li>
                 <li>
                     <form class="delete-answer-form" action="/api/questions/{3}/answers/{4}" method="POST">
