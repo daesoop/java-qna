@@ -25,12 +25,12 @@ public class QuestionController {
     }
 
     @PostMapping("/question")
-    public String question(HttpSession session , String contents, String title) {
+    public String question(HttpSession session, String contents, String title) {
         if (!HttpSessionUtils.isLoginUser(session)) {
             return "user/login";
         }
         User sessionUser = HttpSessionUtils.getUserFromSession(session);
-        Question question = new Question(sessionUser.getUserId(), title, contents);
+        Question question = new Question(sessionUser, title, contents);
         qnaRepository.save(question);
         return "redirect:/";
     }
@@ -45,7 +45,7 @@ public class QuestionController {
     public String qnaUpdate(@PathVariable Long id, Model model, HttpSession session) {
         Question question = qnaRepository.findById(id).get();
         model.addAttribute("question", question);
-        if (!HttpSessionUtils.isValid(session,question)) {
+        if (!HttpSessionUtils.isValid(session, question)) {
             throw new IllegalStateException("you can't access the other's question");
         }
         return "qna/update";
@@ -66,7 +66,7 @@ public class QuestionController {
     public String delete(@PathVariable Long id, HttpSession session, Model model) {
         Question question = qnaRepository.findById(id).get();
         model.addAttribute("question", question);
-        if (!HttpSessionUtils.isValid(session,question)) {
+        if (!HttpSessionUtils.isValid(session, question)) {
             throw new IllegalStateException("you can't delete the other's question");
         }
         qnaRepository.delete(question);

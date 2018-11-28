@@ -16,10 +16,10 @@ public class HttpSessionUtils {
     }
 
     public static User getUserFromSession(HttpSession session) {
-        if(!isLoginUser(session)) {
+        if (!isLoginUser(session)) {
             return null;
         }
-        return (User)session.getAttribute(USER_SESSION_KEY);
+        return (User) session.getAttribute(USER_SESSION_KEY);
     }
 
     public static boolean isValid(HttpSession session, Question question) {
@@ -27,6 +27,6 @@ public class HttpSessionUtils {
             return false;
         }
         User loginUser = getUserFromSession(session);
-        return  question.matchUserId(loginUser.getUserId());
+        return question.matchUserId(loginUser.getUserId());
     }
 }

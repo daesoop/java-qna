@@ -1,6 +1,7 @@
 package codesquad.user;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 // 데이터베이스와 메핑하는 애너테이션
 @Entity
@@ -54,6 +55,9 @@ public class User {
         this.email = email;
     }
 
+    public boolean matchPassword(String password) {
+        return this.password.equals(password);
+    }
     public User update(User newUser) {
         this.password = newUser.password;
         this.name = newUser.name;
@@ -71,7 +75,20 @@ public class User {
                 '}';
     }
 
-    public boolean matchPassword(String password) {
-        return this.password.equals(password);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id &&
+                Objects.equals(userId, user.userId) &&
+                Objects.equals(password, user.password) &&
+                Objects.equals(name, user.name) &&
+                Objects.equals(email, user.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, userId, password, name, email);
     }
 }
